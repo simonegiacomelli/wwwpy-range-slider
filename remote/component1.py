@@ -1,3 +1,4 @@
+import inspect
 import wwwpy.remote.component as wpc
 import js
 
@@ -7,16 +8,14 @@ logger = logging.getLogger(__name__)
 
 
 class Component1(wpc.Component, tag_name='component-1'):
+    input1: js.HTMLInputElement = wpc.element()
+    div1: js.HTMLDivElement = wpc.element()
+    _slider1: js.HTMLInputElement = wpc.element()
 
     def init_component(self):
         # language=html
         self.element.innerHTML = """
-<div>component-1</div>
-
 <style>
-.slidecontainer {
-  width: 100%;
-}
 
 .slider {
   -webkit-appearance: none;
@@ -55,11 +54,13 @@ class Component1(wpc.Component, tag_name='component-1'):
 <h1>Custom Range Slider</h1>
 
 <div class="slidecontainer">
-  <p>Default range slider:</p>
-  <input type="range" min="1" max="100" value="50">
-  
-  <p>Custom range slider:</p>
-  <input type="range" min="1" max="100" value="50" class="slider" id="myRange">
+  <input data-name='_slider1' type="range" min="1" max="100" value="50" class="slider">
 </div>
 
 """
+
+    async def _slider1__input(self, event):
+        logger.debug(f'{inspect.currentframe().f_code.co_name} '
+                     f'_slider1.value={self._slider1.value}')
+    
+    
